@@ -16,7 +16,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".TelaCadastro" />
-        <activity android:name=".MostraTodosUsuarios" />
         <activity
             android:name=".ViewPrincipalActivity"
             android:label="@string/title_activity_view_principal"

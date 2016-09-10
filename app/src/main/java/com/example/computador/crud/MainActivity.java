@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sp.edit();
 
                                 editor.putString("email", email);
+                                editor.putInt("codigo", position);
                                 editor.putString("senha", senha);
                                 editor.commit();
                             }

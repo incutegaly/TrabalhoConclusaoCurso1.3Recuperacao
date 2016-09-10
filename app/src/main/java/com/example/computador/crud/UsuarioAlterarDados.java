@@ -1,5 +1,6 @@
 package com.example.computador.crud;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -26,29 +27,64 @@ public class UsuarioAlterarDados extends AppCompatActivity {
     }
 
     public void alterarUsuario(View view){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         edEmail =  (EditText) findViewById(R.id.editText7);
         edNome = (EditText)findViewById(R.id.editText8);
         edSobrenome = (EditText) findViewById(R.id.editText6);
         edIdade = (EditText) findViewById(R.id.editText12);
         edSenha = (EditText) findViewById(R.id.editText13);
         btAlterar = (Button) findViewById(R.id.btAlterar);
-        int position = 0;
-        Usuario usuario = new Usuario();
-        usuario.setEmail(edEmail.getText().toString());
-        usuario.setNome(edNome.getText().toString());
-        usuario.setSobrenome(edSobrenome.getText().toString());
-        usuario.setIdade(Integer.parseInt(edIdade.getText().toString()));
-        usuario.setSenha(edSenha.getText().toString());
 
 
-        DbHelper db = new DbHelper(this);
 
-        db.atualizarUsuario(usuario, position);
+        String email = edEmail.getText().toString();
+        String nome = edNome.getText().toString();
+        String sobrenome = edSobrenome.getText().toString();
+        String idade = edIdade.getText().toString();
+        String senha = edSenha.getText().toString();
+
+        boolean validacao = true;
+
+        if(email==null || email.equals("")) {
+
+            validacao = false;
+            edEmail.setError("Email Obrigatório");
+        }
+        if(nome==null || nome.equals("")) {
+            validacao = false;
+            edNome.setError("Nome Obrigatório");
+        }
+
+        if(sobrenome==null || sobrenome.equals("")) {
+            validacao = false;
+            edSobrenome.setError("Sobrenome Obrigatório");
+        }
+
+         if(idade==null || idade.equals("")){
+             validacao = false;
+             edIdade.setError("Idade Obrigatória");
+        }
+
+         if(senha==null || senha.equals("")){
+            validacao = false;
+            edSenha.setError("Senha Obrigatória");
+        }
 
 
-        Intent intent = new Intent(this, MostraTodosUsuarios.class);
-        startActivity(intent);
+        if(validacao){
+            Usuario usuario = new Usuario();
+            usuario.setEmail(edEmail.getText().toString());
+            usuario.setNome(edNome.getText().toString());
+            usuario.setSobrenome(edSobrenome.getText().toString());
+            usuario.setIdade(Integer.parseInt(edIdade.getText().toString()));
+            usuario.setSenha(edSenha.getText().toString());
 
+
+            DbHelper db = new DbHelper(this);
+            int position = sharedPreferences.getInt("codigo", 0);
+            db.atualizarUsuario(usuario, position);
+            finish();
+        }
     }
 
 

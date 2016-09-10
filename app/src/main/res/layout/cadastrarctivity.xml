@@ -16,16 +16,6 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:hint="Confirme o seu Email"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText4" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="17dp" />
-
-    <EditText
-        android:layout_width="match_parent"
         android:hint="Nome"
         android:layout_height="wrap_content"
         android:id="@+id/editText5" />
@@ -62,8 +52,17 @@
 
     <Space
         android:layout_width="match_parent"
+        android:layout_height="17dp" />
+
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.33" />
+        android:hint="Confirme sua senha"
+        android:id="@+id/editText4" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Space
         android:layout_width="match_parent"
@@ -72,7 +71,8 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.63" />
 
     <Button
         android:layout_width="match_parent"
@@ -80,15 +80,6 @@
         android:text="Cadastrar"
         android:id="@+id/btCadastrar"
         android:onClick="cadastrarUsuario"
-        android:background="@drawable/botao" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mostrar Usuarios"
-        android:onClick="mostrarUsuarios"
-        android:id="@+id/button4"
-        android:layout_gravity="center_horizontal"
         android:background="@drawable/botao" />
 
     <Button
