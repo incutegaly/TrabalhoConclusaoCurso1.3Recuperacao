@@ -8,9 +8,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class TelaCadastro extends Activity {
+import java.util.regex.Pattern;
 
-        EditText EdEmail;
+public class TelaCadastro extends Activity {
+    public static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+    );
+
+
+    EditText EdEmail;
         EditText EdConfirmaSenha;
         EditText EdNome;
         EditText EdSobrenome;
@@ -41,6 +53,7 @@ public class TelaCadastro extends Activity {
         String confirmaSenha = EdConfirmaSenha.getText().toString();
 
         boolean validacao = true;
+        boolean senhaValidacao = false;
 
         if (email == null || email.equals("")) {
 
@@ -71,9 +84,19 @@ public class TelaCadastro extends Activity {
             validacao = false;
             EdConfirmaSenha.setError("Confirme sua Senha");
         }
+        if (checkEmail(email) == false) {
+            validacao = false;
+            EdEmail.setError("Email Inválido");
+        }
 
+        if (senha.equals(confirmaSenha)) {
+            senhaValidacao = true;
+        } else {
+            validacao = false;
+            EdSenha.setError("Senhas diferentes");
+        }
 
-        if(validacao){
+        if (validacao & senhaValidacao) {
             Usuario usu = new Usuario();
             usu.setEmail(EdEmail.getText().toString());
             usu.setSobrenome(EdSobrenome.getText().toString());
@@ -91,4 +114,8 @@ public class TelaCadastro extends Activity {
         finish();
     }
 
-    }
+
+
+    private boolean checkEmail(String email) {
+        return EMAIL_ADDRESS_PATTERN.matcher(email).matches();
+    }}

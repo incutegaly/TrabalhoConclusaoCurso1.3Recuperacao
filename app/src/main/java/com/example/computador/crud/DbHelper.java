@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private SQLiteDatabase db;
 
     public DbHelper(Context context) {
-        super(context, NOME_BASE, null, 6);
+        super(context, NOME_BASE, null,6);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class DbHelper extends SQLiteOpenHelper {
         //inserindo no banco
         String sqlCreateTabelaUsuario = "CREATE TABLE Usuario("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "email TEXT,"
+                + "email TEXT UNIQUE,"
                 + "nome TEXT,"
                 + "sobrenome TEXT,"
                 + "idade INTEGER,"

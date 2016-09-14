@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 public class UsuarioAlterarDados extends AppCompatActivity {
     private static final String PREF_NAME = "LoginActivityPreference";
+
     EditText edEmail;
     EditText edNome;
     EditText edSobrenome;
@@ -23,19 +24,20 @@ public class UsuarioAlterarDados extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_usuario_alterar_dados);
-
-    }
-
-    public void alterarUsuario(View view){
-        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         edEmail =  (EditText) findViewById(R.id.editText7);
         edNome = (EditText)findViewById(R.id.editText8);
         edSobrenome = (EditText) findViewById(R.id.editText6);
         edIdade = (EditText) findViewById(R.id.editText12);
         edSenha = (EditText) findViewById(R.id.editText13);
         btAlterar = (Button) findViewById(R.id.btAlterar);
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        edEmail.setHint(sharedPreferences.getString("email",""));
 
 
+    }
+
+    public void alterarUsuario(View view){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         String email = edEmail.getText().toString();
         String nome = edNome.getText().toString();

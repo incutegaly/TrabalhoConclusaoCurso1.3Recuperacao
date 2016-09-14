@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+
 public class MainActivity extends AppCompatActivity {
     private static final String PREF_NAME = "LoginActivityPreference";
 
@@ -93,4 +95,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
     }
-}
+
+
+
+    }
+
+
