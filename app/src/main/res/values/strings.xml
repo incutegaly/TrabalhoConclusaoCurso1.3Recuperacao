@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crud</string>
+    <string name="app_name">Acessibilidade</string>
     <string name="title_activity_cadastrar">Cadastrar</string>
     <string name="login_valUsuario">Email Obrigatório</string>
     <string name="login_valSenha">Senha Obrigatório</string>

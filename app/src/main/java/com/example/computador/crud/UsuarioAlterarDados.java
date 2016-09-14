@@ -89,5 +89,8 @@ public class UsuarioAlterarDados extends AppCompatActivity {
         }
     }
 
+    public void voltarJanela(View view){
+        finish();
+    }
 
 }

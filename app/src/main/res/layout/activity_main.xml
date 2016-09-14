@@ -9,6 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.computador.crud.MainActivity">
 
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageView2"
+        android:background="@drawable/acessibilidade"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +50,8 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
         android:id="@+id/editText2"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
@@ -53,21 +63,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Entrar"
+        android:textStyle="bold"
         android:id="@+id/button"
+        android:textColor="#ffffff"
         android:onClick="logar"
         android:background="@drawable/botao"
-        android:layout_below="@+id/editText2"
+        android:backgroundTint="@drawable/botao"
+        android:layout_below="@+id/space"
+        android:layout_alignRight="@+id/space"
+        android:layout_alignEnd="@+id/space"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/editText2"
-        android:layout_alignEnd="@+id/editText2"
-        android:backgroundTint="@drawable/botao" />
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cadastrar"
+        android:textStyle="bold"
         android:id="@+id/button2"
+        android:textColor="#ffffff"
         android:onClick="novaJanela"
         android:background="@drawable/botao"
         android:allowUndo="false"
@@ -80,18 +94,18 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Salvar Conexão"
+        android:text="Manter Conexão"
         android:id="@+id/checkBox"
-        android:checked="false"
+        android:checked="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
-        android:background="@drawable/acessibilidade"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="17dp"
+        android:layout_below="@+id/editText2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space" />
 
 </RelativeLayout>
