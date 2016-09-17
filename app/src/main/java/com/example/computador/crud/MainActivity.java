@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void abrir(View view){
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
+    }
 
     public void logar(View view){
 

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -20,23 +21,23 @@ public class DbHelper extends SQLiteOpenHelper {
      private static final String IDADE_USUARIO = "idade";
      private static final String UID = "id";
      */
-    private static final int VERSAO_BASE = 6;
+    private static final int VERSAO_BASE = 9;
     private SQLiteDatabase db;
 
     public DbHelper(Context context) {
-        super(context, NOME_BASE, null,6);
+        super(context, NOME_BASE, null, 9);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //inserindo no banco
         String sqlCreateTabelaUsuario = "CREATE TABLE Usuario("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "email TEXT UNIQUE,"
+                + "id INTEGER AUTOINCREMENT,"
+                + "email TEXT PRIMARY KEY,"
                 + "nome TEXT,"
                 + "sobrenome TEXT,"
                 + "idade INTEGER,"
-                + "senha INTEGER"
+                + "senha INTEGER,"
                 + ")";
 
         db.execSQL(sqlCreateTabelaUsuario);
@@ -90,31 +91,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Usuario> selectTodosUsuarios() {
-
-        List<Usuario> ListUsuarios = new ArrayList<Usuario>();
-
-        SQLiteDatabase db = getReadableDatabase();
-        String sqlSelectTodosUsuarios = "SELECT * FROM Usuario";
-
-        Cursor c = db.rawQuery(sqlSelectTodosUsuarios, null);
-
-        if (c.moveToFirst()) {
-            do {
-                Usuario usu = new Usuario();
-                usu.setId(c.getInt(0));
-                usu.setEmail(c.getString(1));
-                usu.setNome(c.getString(2));
-                usu.setSobrenome(c.getString(3));
-                usu.setIdade(c.getInt(4));
-                usu.setSenha(c.getString(5));
-                ListUsuarios.add(usu);
-            } while (c.moveToNext());
-        }
-        db.close();
-        return ListUsuarios;
-    }
-
     public boolean logar(String email, String senha) {
         SQLiteDatabase db = getReadableDatabase();
         String[] campos = {email, senha};
@@ -133,14 +109,62 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] campos = {email, senha};
         Cursor cursor = db.query("Usuario", null, "email= ? and senha= ?", campos, null, null, null, null);
         if (cursor.moveToFirst()) {
-                position = cursor.getInt(0);
+            position = cursor.getInt(0);
         }
         return position;
     }
+
+    public List<Usuario> selectTodosOsUsuarios() {
+
+        List<Usuario> ListUsuario = new ArrayList<Usuario>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        String sqlSelectTodoUsuarios = "SELECT * FROM Usuario";
+
+        Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Usuario usu = new Usuario();
+                usu.setId(c.getInt(0));
+                usu.setEmail(c.getString(1));
+                usu.setNome(c.getString(2));
+                usu.setSobrenome(c.getString(3));
+                usu.setIdade(c.getInt(4));
+                usu.setSenha(c.getString(5));
+
+                ListUsuario.add(usu);
+            } while (c.moveToNext());
+        }
+
+        db.close();
+        return ListUsuario;
+    }
+
+    public Usuario SelectUsuario(int position) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String sqlSelectTodoUsuarios = "SELECT * FROM Usuario where id = " + position;
+
+        Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Usuario usu = new Usuario();
+                usu.setId(c.getInt(0));
+                usu.setEmail(c.getString(1));
+                usu.setNome(c.getString(2));
+                usu.setSobrenome(c.getString(3));
+                usu.setIdade(c.getInt(4));
+                usu.setSenha(c.getString(5));
+                return usu;
+            } while (c.moveToNext());
+        } else {
+            db.close();
+            return null;
+        }
+    }
 }
-
-
-
-
 
 
