@@ -108,7 +108,7 @@ public class TelaCadastro extends Activity {
                     DbHelper dbH = new DbHelper(this);
                     dbH.insertUsuario(usu);
                 }catch (SQLException e){
-                    //NAO APARECE MENSAGEM
+                    //NAO APARECE MENSAGEM !
                     Toast toast = Toast.makeText(getApplicationContext(), "Usuario ja Cadastrado" , Toast.LENGTH_LONG);
                     toast.show();
                 }
