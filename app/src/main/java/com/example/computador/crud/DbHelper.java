@@ -21,23 +21,23 @@ public class DbHelper extends SQLiteOpenHelper {
      private static final String IDADE_USUARIO = "idade";
      private static final String UID = "id";
      */
-    private static final int VERSAO_BASE = 9;
+    private static final int VERSAO_BASE = 11;
     private SQLiteDatabase db;
 
     public DbHelper(Context context) {
-        super(context, NOME_BASE, null, 9);
+        super(context, NOME_BASE, null, 11);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //inserindo no banco
         String sqlCreateTabelaUsuario = "CREATE TABLE Usuario("
-                + "id INTEGER AUTOINCREMENT,"
-                + "email TEXT PRIMARY KEY,"
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "email TEXT,"
                 + "nome TEXT,"
                 + "sobrenome TEXT,"
                 + "idade INTEGER,"
-                + "senha INTEGER,"
+                + "senha INTEGER"
                 + ")";
 
         db.execSQL(sqlCreateTabelaUsuario);
@@ -165,6 +165,18 @@ public class DbHelper extends SQLiteOpenHelper {
             return null;
         }
     }
+
+
+    public boolean buscaEmail(String email) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] campos = {email};
+        Cursor cursor = db.query("Usuario", null, "email= ?", campos, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }
-
-

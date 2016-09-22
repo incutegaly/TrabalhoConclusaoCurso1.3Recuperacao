@@ -81,6 +81,7 @@
             android:id="@+id/editText12"
             android:layout_row="10"
             android:hint="Idade"
+            android:inputType="number"
             android:layout_column="15" />
 
         <Space

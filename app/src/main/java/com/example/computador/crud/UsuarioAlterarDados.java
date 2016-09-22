@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
@@ -49,19 +50,17 @@ public class UsuarioAlterarDados extends AppCompatActivity {
         int position = sharedPreferences.getInt("codigo", 0);
 
 
-        /*PROFESSOR, EXECUTANDO ESSE BLOCO O SENHOR VERÁ QUE ESTA TRAZENDO AS INFORMAÇÕES CORRETAMENTE, PORÉM, AO TENTAR PASSAR
-          A IDADE ACUSA ERRO, POR ISSO ESTA COMENTADO
-
-         */
             DbHelper dbHelper = new DbHelper(this);
             Usuario usu = new Usuario();
             usu = dbHelper.SelectUsuario(position);
+
+            edIdade.toString();
 
 
             edEmail.setText(usu.getEmail());
             edNome.setText(usu.getNome());
             edSobrenome.setText(usu.getSobrenome());
-           // edIdade.setText(usu.getIdade());
+            edIdade.setText(Integer.toString(usu.getIdade()));
             edSenha.setText(usu.getSenha());
 
 
@@ -76,7 +75,39 @@ public class UsuarioAlterarDados extends AppCompatActivity {
         String idade = edIdade.getText().toString();
         String senha = edSenha.getText().toString();
 
+        boolean validacao = true;
 
+        if (email == null || email.equals("")) {
+
+            validacao = false;
+            edEmail.setError("Email Obrigatório");
+        }
+
+        if (nome == null || nome.equals("")) {
+            validacao = false;
+            edNome.setError("Nome Obrigatório");
+        }
+
+        if (sobrenome == null || sobrenome.equals("")) {
+            validacao = false;
+            edSobrenome.setError("Sobrenome Obrigatório");
+        }
+
+        if (idade == null || idade.equals("")) {
+            validacao = false;
+            edIdade.setError("Idade Obrigatória");
+        }
+
+        if (senha == null || senha.equals("")) {
+            validacao = false;
+            edSenha.setError("Senha Obrigatória");
+        }
+        if(checkEmail(email)==false) {
+            validacao = false;
+            edEmail.setError("Email Invalido");
+        }
+
+            if(validacao){
             Usuario usuario = new Usuario();
             usuario.setEmail(edEmail.getText().toString());
             usuario.setNome(edNome.getText().toString());
@@ -86,8 +117,10 @@ public class UsuarioAlterarDados extends AppCompatActivity {
             DbHelper db = new DbHelper(this);
             int position = sharedPreferences.getInt("codigo", 0);
             db.atualizarUsuario(usuario, position);
+            Toast.makeText(getApplicationContext(),"Usuario Alterado Com Sucesso", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
 
 
     public void voltarJanela(View view){

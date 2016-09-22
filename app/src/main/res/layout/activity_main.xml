@@ -108,14 +108,4 @@
         android:layout_alignParentStart="true"
         android:id="@+id/space" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:onClick="abrir"
-        android:id="@+id/button3"
-        android:layout_above="@+id/textView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
 </RelativeLayout>

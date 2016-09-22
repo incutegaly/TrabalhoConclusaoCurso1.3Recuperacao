@@ -54,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void abrir(View view){
-        Intent intent = new Intent(this, Main2Activity.class);
-        startActivity(intent);
-    }
 
     public void logar(View view){
 
@@ -79,16 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
                 if(validacao) {
                     if (db.logar(email, senha) == true) {
-                           int position =  db.busca(email,senha);
+                        Toast.makeText(getApplicationContext(),"Bem vindo", Toast.LENGTH_SHORT).show();
+                        int position =  db.busca(email,senha);
+                        SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt("codigo", position);
+                        editor.commit();
                             if(SaveLogin.isChecked()){
-                                SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp.edit();
-
                                 editor.putString("email", email);
-                                editor.putInt("codigo", position);
                                 editor.putString("senha", senha);
                                 editor.commit();
                             }
+
 
                     Intent intent = new Intent(this, ViewPrincipalActivity.class);
                     this.finish();
