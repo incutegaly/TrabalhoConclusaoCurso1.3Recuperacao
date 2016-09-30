@@ -178,5 +178,14 @@ public class DbHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-
+    public int retornaEmail(String email) {
+        int position = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        String[] campos = {email};
+        Cursor cursor = db.query("Usuario", null, "email= ?", campos, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            position = cursor.getInt(0);
+        }
+        return position;
+    }
 }

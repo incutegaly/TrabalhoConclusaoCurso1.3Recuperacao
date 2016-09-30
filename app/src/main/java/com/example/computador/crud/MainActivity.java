@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         String senha = sp.getString("senha", "");
 
 
+
         db = new DbHelper(this);
 
             if (db.logar(email, senha) == true) {
@@ -51,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
     public void novaJanela(View view) {
 
         Intent intent = new Intent(this,TelaCadastro.class );
+        startActivity(intent);
+    }
+
+    public void novaJanela2(View view) {
+
+        Intent intent = new Intent(this,EsqueceuSenha.class );
         startActivity(intent);
     }
 
