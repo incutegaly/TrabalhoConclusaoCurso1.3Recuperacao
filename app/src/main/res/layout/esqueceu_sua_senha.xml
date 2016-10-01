@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Recuperação de senha"
+        android:id="@+id/textView4"
+        android:layout_gravity="center_horizontal" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:hint="Digite o seu email de login"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText14" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:hint="Confirme o seu email de login"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText15" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:text="Enviar senha para email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:id="@+id/btSenha"
+        android:textColor="#ffffff"
+        android:background="@drawable/botao" />
+
+    <Button
+        android:text="Voltar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:id="@+id/btVoltar"
+        android:textColor="#ffffff"
+        android:onClick="voltarJanela"
+        android:background="@drawable/botao" />
+
+
+</LinearLayout>
