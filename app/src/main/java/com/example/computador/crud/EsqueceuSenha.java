@@ -112,7 +112,7 @@ public class EsqueceuSenha extends Activity implements OnClickListener {
                             }
                         });
 
-                        pdialog = ProgressDialog.show(context, "", "Sending Mail...", true);
+                        pdialog = ProgressDialog.show(context, "", "Enviando email...", true);
 
                         RetreiveFeedTask task = new RetreiveFeedTask();
                         task.execute();
@@ -154,7 +154,7 @@ public class EsqueceuSenha extends Activity implements OnClickListener {
         @Override
         protected void onPostExecute(String result) {
             pdialog.dismiss();
-            Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Messagem enviada", Toast.LENGTH_LONG).show();
         }
     }
 
