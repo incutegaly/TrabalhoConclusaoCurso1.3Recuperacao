@@ -1,18 +1,19 @@
 package com.example.computador.crud;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-
 import android.support.v4.app.FragmentManager;
-
 import android.support.v7.app.AlertDialog;
-
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,12 +23,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-
-public class ViewPrincipalActivity extends AppCompatActivity
+public class ViewPrincipalActivity extends AppCompatActivity 
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String PREF_NAME = "LoginActivityPreference";
+    protected boolean mbActive;
+    protected static  int TIMER_RUNTIME = 10000;
+    private ListView listPlaces;
     private AlertDialog alerta; //atributo da classe
 
     @Override
@@ -55,9 +63,40 @@ public class ViewPrincipalActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        android.app.FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
+
+       final Handler ha=new Handler();
+        ha.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                check();
+                ha.postDelayed(this, 10000);
+            }
+        }, 10000);
 
     }
 
+    @Override
+   public void onStart(){
+       super.onStart();
+            InternetCheck internetCheck = new InternetCheck();
+            if (internetCheck.isNetworkAvailable(this)) {
+                changeStatus(true);
+            } else {
+                changeStatus(false);
+            }
+        }
+
+    public void check(){
+        InternetCheck internetCheck = new InternetCheck();
+        if(internetCheck.isNetworkAvailable(this)){
+            changeStatus(true);
+        } else {
+            changeStatus(false);
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -93,8 +132,8 @@ public class ViewPrincipalActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        android.app.FragmentManager fm = getFragmentManager();
+        // Handle navigation view item clicks here.;
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
@@ -102,10 +141,11 @@ public class ViewPrincipalActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_maps) {
-            Intent intent = new Intent (this, MapsActivity.class);
+            Intent intent = new Intent(this, ListActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(this, MyPlaces.class);
+            startActivity(intent);
         } else if (id == R.id.nav_usuario) {
             Intent intent = new Intent(this, UsuarioAlterarDados.class);
             startActivity(intent);
@@ -148,6 +188,52 @@ public class ViewPrincipalActivity extends AppCompatActivity
         alerta.show();
     }
 
+    public void changeStatus(boolean isConnected) {
+
+        // Change status according to boolean value
+        if (!isConnected) {
+            AlertDialog.Builder CheckBuilder = new AlertDialog.Builder(ViewPrincipalActivity.this);
+            CheckBuilder.setIcon(R.mipmap.ic_launcher);
+            CheckBuilder.setTitle("Error");
+            CheckBuilder.setMessage("Sem conexão com Internet");
+            CheckBuilder.setPositiveButton("Tente Novamente", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    //Restartando Activity
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+
+            CheckBuilder.setNegativeButton("Sair", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+
+            AlertDialog alertDialog = CheckBuilder.create();
+            alertDialog.show();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        ActivityVisibleConnection.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+       ActivityVisibleConnection.activityResumed();// On Resume notify the Application
+    }
 
 
-}
+        }
+
+
+

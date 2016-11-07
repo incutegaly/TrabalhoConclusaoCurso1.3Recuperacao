@@ -110,6 +110,7 @@ public class TelaCadastro extends Activity {
             usu.setIdade(Integer.parseInt(EdIdade.getText().toString()));
             usu.setSenha(EdSenha.getText().toString());
             DbHelper dbH = new DbHelper(this);
+
             if(dbH.buscaEmail(email)==true){
                 Toast.makeText(getApplicationContext(),"Usuario Já Possui Conta", Toast.LENGTH_SHORT).show();
             }else{

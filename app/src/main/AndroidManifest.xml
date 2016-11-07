@@ -1,36 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.example.computador.crud">
+    package="com.example.computador.crud">
 
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="com.androidtutorialpoint.mymapsappsdirection.permission.MAPS_RECEIVE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.androidtutorialpoint.mymapsappsdirection.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name=".ActivityVisibleConnection"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TelaCadastro" />
+        <activity
+            android:name=".ViewPrincipalActivity"
+            android:label="@string/title_activity_view_principal"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UsuarioAlterarDados" />
+        <activity android:name=".EsqueceuSenha" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDXf9UHPrEC0pztYZkEhOBg8j4FSpRYjVw">
+            /</meta-data>
+
+        <activity android:name=".MyPlaces"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SelectedPlaceDetails" />
+        <activity android:name=".ListActivity" />
 
 
-<application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
-    android:supportsRtl="true" android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <receiver
+            android:name=".InternetConnection"
+            android:enabled="true">
+            <intent-filter>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity android:name=".TelaCadastro" />
-    <activity android:name=".ViewPrincipalActivity" android:label="@string/title_activity_view_principal"
-        android:theme="@style/AppTheme.NoActionBar" />
-    <activity android:name=".UsuarioAlterarDados"></activity>
-    <activity android:name=".EsqueceuSenha"></activity>
-    <activity android:name=".MapsActivity"></activity>
+                <!-- Intent filters for broadcast receiver -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
 
-    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDXf9UHPrEC0pztYZkEhOBg8j4FSpRYjVw">
-        /
-    </meta-data>
+        <activity android:name=".Avalicao"/>
 
-</application>
+    </application>
 
 </manifest>
