@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +43,10 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     GPSManager gpsManager;
     GoogleMap googleMap;
     android.support.v7.app.ActionBar actionBar;
+
+    AvaliacaoListAdapter avaliacaoListAdapter;
+
+    private List<String> mAvaliacao;
 
     AlertDialogManager alert;
     ListView listView;
@@ -127,14 +132,27 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     protected void onResume(){
         super.onResume();
         List<String> lista;
-        List<Avaliacao> arrayList;
+
+        mAvaliacao = new ArrayList<>();
+
         DbHelper dbH = new DbHelper(this);
         try{
+            lista = dbH.selectUsuarioAvaliacao(placeName);
+            //mAvaliacao = dbH.selectUsuarioAvaliacao(placeName);
+            if(lista.size()==0){
+                String [] row = {"Nenhum comentario a ser exibido"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, row );
+                listView.setAdapter(adapter);
+            }
 
-            lista = dbH.selectComentario(placeName);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista );
-            listView.setAdapter(adapter);
-            setListViewHeightBasedOnChildren(listView);
+            else {
+               // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, lista );
+
+                avaliacaoListAdapter = new AvaliacaoListAdapter(getApplicationContext(),  lista);
+                  //  listView.setAdapter(avaliacaoListAdapter);
+                 listView.setAdapter(avaliacaoListAdapter);
+                setListViewHeightBasedOnChildren(listView);
+                }
 
         }catch (Exception e ){
             Log.i("Error:  ", e.getMessage());

@@ -42,7 +42,7 @@
             android:id="@+id/coment"
             android:gravity="center"
             android:layout_height="match_parent"
-            android:text="---------------------------COMENTARIOS----------------------------------"/>
+            android:text="---------------------------COMENTARIOS--------------------------------"/>
 
 
         <ListView

@@ -2,9 +2,6 @@ package com.example.computador.crud;
 
 import android.app.Activity;
 
-/**
- * Created by COMPUTADOR on 07/11/2016.
- */
 
 public class Avaliacao extends Activity {
 

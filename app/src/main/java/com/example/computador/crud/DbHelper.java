@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
      private static final String UID = "id";
      */
     private static final String AVALIACAO_LUGARES = "CREATE TABLE " + AVALIACAO +
-            " (_ID integer primary key autoincrement, id_usuario INTEGER, Name_Place TEXT, Notas Double, Comentario TEXT)";
+            " (_ID integer primary key autoincrement, id_usuario INTEGER, Name_Place TEXT, Notas Double, Comentario TEXT, FOREIGN KEY (id_usuario) REFERENCES Usuario(id))";
 
     private static final String AVALIACAO_CRIA_TABELA = "CREATE TABLE " + LUGARES +
             " (_ID integer primary key autoincrement, place_name TEXT, place_vinicity TEXT)";
@@ -60,6 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
         //excluindo tabelas
         String sqlDropTableUsuario = "DROP TABLE Usuario";
         db.execSQL("drop table " + AVALIACAO);
+        db.execSQL("drop table " + LUGARES);
         db.execSQL(sqlDropTableUsuario);
 
 
@@ -123,6 +124,44 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
         return comentarios;
     }
+
+    public List<String> selectEstabelecimentos (int position){
+        SQLiteDatabase db = getReadableDatabase();
+        String sqlSelectTodoUsuarios = "SELECT Name_Place FROM Avaliacao, Usuario where Avaliacao.id_usuario AND Usuario.id = '" + position + "'";
+        List<String> comentarios = new ArrayList<String>();
+        Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
+
+        if(c.moveToFirst()){
+            do{
+                comentarios.add (c.getString(0));
+            }while (c.moveToNext());
+        }
+        db.close();
+        return comentarios;
+    }
+
+
+    public List<String> selectUsuarioAvaliacao (String name_place){
+        SQLiteDatabase db = getReadableDatabase();
+        String sqlSelectTodoUsuarios = "SELECT u.nome, a.Comentario FROM Usuario u JOIN Avaliacao a ON a.id_usuario = u.id AND a.Name_Place = '" +name_place+ "'";
+        List<String> comentarios = new ArrayList<String>();
+        Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
+
+        if(c.moveToFirst()){
+            do{
+                comentarios.add (c.getString(0));
+                comentarios.add (c.getString(1));
+            }while (c.moveToNext());
+        }
+        db.close();
+        return comentarios;
+    }
+
+
+
+
+
+
 
     public List<Avaliacao> selectAvaliacao (String name_place){
         SQLiteDatabase db = getReadableDatabase();
