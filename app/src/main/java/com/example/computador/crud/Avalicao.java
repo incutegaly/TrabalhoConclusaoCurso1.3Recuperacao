@@ -74,6 +74,5 @@ public class Avalicao extends Activity {
         }catch (Exception e) {
             Log.e("Error: ", e.getMessage());
         }
-
     }
 }

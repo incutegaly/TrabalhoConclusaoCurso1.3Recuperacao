@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +54,7 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     TextView textView;
     ImageView placeImage;
     TextView placeStatus;
-
-    LoadImage loadImage;
+    TextView txtNotas;
 
     String placeName, placeVicinity, placeLat, placeLng, placePhotoRef, placeDistance, placeType;
 
@@ -79,7 +79,7 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
 
 
         listView = (ListView)findViewById(R.id.listView);
-
+        txtNotas = (TextView)findViewById(R.id.txtNotas);
         SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("Name", placeName);
@@ -91,20 +91,13 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
         alert = new AlertDialogManager();
 
         placeStatus = (TextView) findViewById(R.id.placeStatus);
-        placeImage = (ImageView) findViewById(R.id.placeImage);
         textView = (TextView) findViewById(R.id.coment);
-
+        placeStatus.setText("Endereço : " + placeVicinity);
 
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if(placePhotoRef.equals("Not Available")){
-            placeStatus.setText("Sorry Image Not Available.\nAddress : " + placeVicinity);
-        }else{
-            loadImage = new LoadImage();
-            loadImage.execute(placePhotoRef);
-        }
     }
 
 
@@ -132,25 +125,39 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     protected void onResume(){
         super.onResume();
         List<String> lista;
-
+        List<String> concatena = new ArrayList<>();
+        List<Double> notas = new ArrayList<>();
+        double media = 0.0;
         mAvaliacao = new ArrayList<>();
 
         DbHelper dbH = new DbHelper(this);
         try{
+            notas = dbH.selectNotas(placeName);
             lista = dbH.selectUsuarioAvaliacao(placeName);
             //mAvaliacao = dbH.selectUsuarioAvaliacao(placeName);
-            if(lista.size()==0){
+            if(lista.size()==0 || notas.size()==0){
+                txtNotas.setText("Sem notas para exibir");
                 String [] row = {"Nenhum comentario a ser exibido"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, row );
                 listView.setAdapter(adapter);
             }
 
             else {
+                for(int j=0; j<notas.size(); j++){
+                    media = (media + notas.get(j) / notas.size());
+                }
+                DecimalFormat formato = new DecimalFormat("#.#");
+                formato.format(media);
+                txtNotas.setText(Double.toString(media));
                // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, lista );
+                for(int i=0; i<lista.size(); i++){
+                    concatena.add(lista.get(i) + ":" + "\n" + lista.get(i=i+1));
+                }
+               // avaliacaoListAdapter = new AvaliacaoListAdapter(getApplicationContext(),  concatena);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, concatena );
 
-                avaliacaoListAdapter = new AvaliacaoListAdapter(getApplicationContext(),  lista);
-                  //  listView.setAdapter(avaliacaoListAdapter);
-                 listView.setAdapter(avaliacaoListAdapter);
+                //listView.setAdapter(avaliacaoListAdapter);
+                 listView.setAdapter(adapter);
                 setListViewHeightBasedOnChildren(listView);
                 }
 
@@ -192,46 +199,6 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     }
 
 
-    class LoadImage extends AsyncTask<String, String, Bitmap> {
-
-        ProgressDialog pDialog;
-
-        @Override
-        protected void onPreExecute() {
-            pDialog = new ProgressDialog(SelectedPlaceDetails.this);
-            pDialog.setMessage("Fetching place image...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            try{
-                InputStream inputStream = new URL(AppData.PLACES_IMAGE_URL + "&key=" + AppData.ServerAPI + "&photoreference=" + params[0]).openStream();
-                return BitmapFactory.decodeStream(inputStream);
-            }catch(MalformedURLException mue){
-                return null;
-            }catch (IOException ioe){
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmapImage) {
-            pDialog.dismiss();
-            if(bitmapImage != null){
-                placeStatus.setText("Address : " + placeVicinity);
-                placeImage.setImageBitmap(bitmapImage);
-            }else{
-                placeStatus.setText("Sorry failed to retrieve Image.\nAddress : " + placeVicinity);
-                alert.showAlertDialog(SelectedPlaceDetails.this, "Place Image", "Sorry failed to retrieve Image.", false);
-            }
-            placeStatus.setText(placeVicinity);
-        }
-
-    }
-
     public void avaliar(View v ){
         Intent selectedPlace= new Intent(SelectedPlaceDetails.this, Avalicao.class);
         selectedPlace.putExtra(KEY_NAME, placeName);
@@ -241,5 +208,6 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
         selectedPlace.putExtra(KEY_LONGITUDE, placeLng);
         startActivity(selectedPlace);
     }
-
 }
+
+

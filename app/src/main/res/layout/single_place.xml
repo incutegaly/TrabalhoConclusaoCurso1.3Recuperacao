@@ -24,11 +24,6 @@
             android:layout_marginTop="10dip"
             android:layout_marginBottom="5dip"/>
 
-        <ImageView
-            android:id="@+id/placeImage"
-            android:layout_width="match_parent"
-            android:layout_height="250dp" />
-
 
         <Button
             android:layout_width="match_parent"
@@ -39,10 +34,26 @@
 
         <TextView
             android:layout_width="match_parent"
+            android:id="@+id/txtcoment"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/txtNotas"
+            android:text="Nota do estabelecimento: "/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/txtNotas"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:text=""/>
+
+
+        <TextView
+            android:layout_width="match_parent"
             android:id="@+id/coment"
             android:gravity="center"
             android:layout_height="match_parent"
-            android:text="---------------------------COMENTARIOS--------------------------------"/>
+            android:text="\n---------------------------COMENTARIOS--------------------------------"/>
 
 
         <ListView

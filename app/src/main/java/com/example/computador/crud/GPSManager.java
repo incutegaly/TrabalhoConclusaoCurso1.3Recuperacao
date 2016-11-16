@@ -1,8 +1,5 @@
 package com.example.computador.crud;
 
-/**
- * Created by Pradumn K Mahanta on 06-07-2016.
- */
 
 import android.app.AlertDialog;
 import android.app.Service;

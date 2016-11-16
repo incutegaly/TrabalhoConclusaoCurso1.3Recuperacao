@@ -1,9 +1,11 @@
 package com.example.computador.crud;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,7 +29,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.lbl_name.setText(holder.mItem.placeName);
         holder.lbl_address.setText(holder.mItem.placeVicinity);
         holder.lbl_distance.setText(holder.mItem.placeDistance);
-        holder.lbl_type.setText(holder.mItem.placeType);
+        //holder.lbl_type.setText(holder.mItem.placeType);
+       // holder.viewGroup.removeAllViews();
+
     }
 
     @Override
@@ -36,19 +40,21 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ViewGroup viewGroup;
         public final View mView;
         public final TextView lbl_name;
         public final TextView lbl_address;
-        public final TextView lbl_type;
+        //public final TextView lbl_type;
         public final TextView lbl_distance;
         public PlaceItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            viewGroup = (ViewGroup)itemView;
             lbl_name = (TextView) view.findViewById(R.id.name);
             lbl_address = (TextView) view.findViewById(R.id.address);
-            lbl_type = (TextView) view.findViewById(R.id.type);
+            //lbl_type = (TextView) view.findViewById(R.id.type);
             lbl_distance = (TextView) view.findViewById(R.id.distance);
         }
 

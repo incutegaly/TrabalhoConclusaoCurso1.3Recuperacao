@@ -1,18 +1,14 @@
 package com.example.computador.crud;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,35 +20,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ViewPrincipalActivity extends AppCompatActivity 
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, TesteFragment.OnFragmentInteractionListener {
     private static final String PREF_NAME = "LoginActivityPreference";
     protected boolean mbActive;
     protected static  int TIMER_RUNTIME = 10000;
     private ListView listPlaces;
     private AlertDialog alerta; //atributo da classe
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_principal);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,8 +51,9 @@ public class ViewPrincipalActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        android.app.FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.rl_fragment_container, new RecyclerViewAdapter()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame1, new TesteFragment()).commit();
 
        final Handler ha=new Handler();
         ha.postDelayed(new Runnable() {
@@ -233,7 +222,11 @@ public class ViewPrincipalActivity extends AppCompatActivity
     }
 
 
-        }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+}
 
 
 

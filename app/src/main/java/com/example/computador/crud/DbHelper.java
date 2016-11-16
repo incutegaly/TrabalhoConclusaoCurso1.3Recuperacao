@@ -102,7 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
         try{
             db.insert("Avaliacao", null, cv);
             db.close();
-            Toast.makeText(context, "Cadastrado!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Avaliação feita!", Toast.LENGTH_LONG).show();
         }catch (Exception e){
 
         }
@@ -110,15 +110,16 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<String> selectComentario (String name_place){
+    public List<String> selectUsuarioAvaliacao (String name_place){
         SQLiteDatabase db = getReadableDatabase();
-        String sqlSelectTodoUsuarios = "SELECT * FROM Avaliacao WHERE Name_Place = '" + name_place + "'";
+        String sqlSelectTodoUsuarios = "SELECT u.nome, a.Comentario FROM Usuario u JOIN Avaliacao a ON a.id_usuario = u.id AND a.Name_Place = '" +name_place+ "'";
         List<String> comentarios = new ArrayList<String>();
         Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
 
         if(c.moveToFirst()){
             do{
-                comentarios.add (c.getString(4));
+                comentarios.add (c.getString(0));
+                comentarios.add (c.getString(1));
             }while (c.moveToNext());
         }
         db.close();
@@ -140,49 +141,19 @@ public class DbHelper extends SQLiteOpenHelper {
         return comentarios;
     }
 
-
-    public List<String> selectUsuarioAvaliacao (String name_place){
+    public List<Double> selectNotas (String name_place){
         SQLiteDatabase db = getReadableDatabase();
-        String sqlSelectTodoUsuarios = "SELECT u.nome, a.Comentario FROM Usuario u JOIN Avaliacao a ON a.id_usuario = u.id AND a.Name_Place = '" +name_place+ "'";
-        List<String> comentarios = new ArrayList<String>();
+        String sqlSelectTodoUsuarios = "SELECT Notas FROM Avaliacao WHERE Name_Place = '" +name_place+ "'";
+        List<Double> notas = new ArrayList<Double>();
         Cursor c = db.rawQuery(sqlSelectTodoUsuarios, null);
 
         if(c.moveToFirst()){
             do{
-                comentarios.add (c.getString(0));
-                comentarios.add (c.getString(1));
+                notas.add(c.getDouble(0));
             }while (c.moveToNext());
         }
         db.close();
-        return comentarios;
-    }
-
-
-
-
-
-
-
-    public List<Avaliacao> selectAvaliacao (String name_place){
-        SQLiteDatabase db = getReadableDatabase();
-        String[] campos = {name_place};
-        Cursor c = db.query("Avaliacao", null, "Name_place= ?", campos, null, null, null, null);
-        List<Avaliacao> ListAvaliacao = new ArrayList<Avaliacao>();
-
-        if(c.moveToFirst()){
-            do{
-                Avaliacao ava = new Avaliacao();
-                ava.setId(c.getInt(0));
-                ava.setNome_usuario(c.getInt(1));
-                ava.setNome_place(c.getString(2));
-                ava.setNotas(c.getString(3));
-                ava.setComentario(c.getString(4));
-                ListAvaliacao.add(ava);
-                return ListAvaliacao;
-            }while (c.moveToNext());
-        }
-        db.close();
-        return null;
+        return notas;
     }
 
 
