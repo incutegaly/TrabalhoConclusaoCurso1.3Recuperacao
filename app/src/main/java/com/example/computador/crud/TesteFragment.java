@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -33,6 +34,9 @@ import java.util.List;
 
 import javax.mail.Quota;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Intent.getIntent;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,7 +56,6 @@ public class TesteFragment extends Fragment  {
     private static final String ARG_PARAM2 = "param2";
 
     AlertDialogManager alert;
-
     private List<PlaceItem> mItems;
 
     GPSManager userCoordinates;
@@ -64,7 +67,8 @@ public class TesteFragment extends Fragment  {
 
     String latitude;
     String longitude;
-
+    private static final String PREF_NAME = "StringActivity";
+    public static String STRING_NAME = "Name";
     public static String KEY_REFERENCE = "Reference";
     public static String KEY_NAME = "Name";
     public static String KEY_ADDRESS = "Address";
@@ -226,9 +230,11 @@ public class TesteFragment extends Fragment  {
             HashMap<String, String> params = new HashMap<>();
             params.put("location", args[0]+","+args[1]);//TODO:CHANGE
             //params.put("location", "40.6655101,-73.89188969999998");
+            SharedPreferences sp = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            String name = sp.getString("string", "");
             params.put("key", AppData.ServerAPI);
             params.put("radius", "1000");
-            params.put("type", "restaurant");
+            params.put("type", name);
             JSONObject jsonObject = jsonParser.makeHttpRequest(AppData.PLACES_SEARCH_URL, "GET", params);
             try{
                 if(jsonObject.getString("status").equals("OK")){

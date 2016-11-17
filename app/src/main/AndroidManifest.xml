@@ -43,7 +43,6 @@
         <activity android:name=".SelectedPlaceDetails" />
         <activity android:name=".ListActivity" />
 
-
         <receiver
             android:name=".InternetConnection"
             android:enabled="true">

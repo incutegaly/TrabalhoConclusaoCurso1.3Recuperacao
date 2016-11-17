@@ -20,6 +20,8 @@
         android:layout_height="80dp"
         android:layout_marginRight="6dp"
         android:src="@null" />
+
+
     <ImageView
         android:layout_toRightOf="@+id/img_string1"
         android:id="@+id/img_string2"
