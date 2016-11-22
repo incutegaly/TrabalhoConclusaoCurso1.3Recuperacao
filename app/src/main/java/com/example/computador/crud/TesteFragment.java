@@ -29,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +61,6 @@ public class TesteFragment extends Fragment  {
     private List<PlaceItem> mItems;
 
     GPSManager userCoordinates;
-
     ProgressDialog pDialog;
 
     RecyclerView recyclerView;
@@ -93,14 +94,6 @@ public class TesteFragment extends Fragment  {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TesteFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static TesteFragment newInstance(String param1, String param2) {
         TesteFragment fragment = new TesteFragment();
@@ -194,16 +187,6 @@ public class TesteFragment extends Fragment  {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -215,7 +198,7 @@ public class TesteFragment extends Fragment  {
         JSONParser jsonParser = new JSONParser();
         JSONParser jsonParserDistance = new JSONParser();
         String placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef;
-
+        Double nota;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -227,9 +210,10 @@ public class TesteFragment extends Fragment  {
         }
 
         protected String doInBackground(String... args) {
+            DbHelper dbHelper = new DbHelper(getActivity());
+            List<Float> notas = new ArrayList<>();
             HashMap<String, String> params = new HashMap<>();
             params.put("location", args[0]+","+args[1]);//TODO:CHANGE
-            //params.put("location", "40.6655101,-73.89188969999998");
             SharedPreferences sp = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
             String name = sp.getString("string", "");
             params.put("key", AppData.ServerAPI);
@@ -241,7 +225,8 @@ public class TesteFragment extends Fragment  {
                     JSONArray resultsArray = jsonObject.getJSONArray("results");
                     Log.d("resultsArray", resultsArray.toString());
                     if(resultsArray.length()>0){
-                        for(int i = 0; i < resultsArray.length(); i++){
+                        for(int i = 0; i < resultsArray.length(); i++) {
+                            float media = 0;
                             JSONObject jObj = resultsArray.getJSONObject(i);
                             Log.d("resultsObject: " + i, jObj.toString());
                             //LAT AND LNG
@@ -250,7 +235,7 @@ public class TesteFragment extends Fragment  {
                             String location = geometryObject.getString("location");
                             JSONObject locationObject = new JSONObject(location);
                             placeLat = locationObject.getString("lat");
-                            placeLng  = locationObject.getString("lng");
+                            placeLng = locationObject.getString("lng");
                             Log.d("Location", placeLat + ", " + placeLng);
 
 
@@ -264,9 +249,9 @@ public class TesteFragment extends Fragment  {
                             Log.d("Address", placeVicinity);
 
                             HashMap<String, String> par = new HashMap<>();
-                            par.put("origins", args[0]+","+args[1]);
+                            par.put("origins", args[0] + "," + args[1]);
                             //par.put("origins", "40.6655101,-73.89188969999998");
-                            par.put("destinations", placeLat+","+placeLng);//TODO:Change
+                            par.put("destinations", placeLat + "," + placeLng);//TODO:Change
                             //par.put("destinations", "41.43206,-81.38992");
                             par.put("key", AppData.ServerAPI);
                             par.put("units", "metric");
@@ -277,38 +262,48 @@ public class TesteFragment extends Fragment  {
                             JSONArray distanceElement = distanceObject.getJSONArray("elements");
                             JSONObject elementObject = distanceElement.getJSONObject(0);
 
-                            if(elementObject.getString("status").equals("OK")){
+                            if (elementObject.getString("status").equals("OK")) {
                                 String distance = elementObject.getString("distance");
                                 JSONObject finalObject = new JSONObject(distance);
                                 placeDistance = finalObject.getString("text");
-                            }else{
+                            } else {
                                 placeDistance = "NA";
                             }
                             Log.d("Distance", placeDistance);
 
                             boolean hasPhoto;
-                            try{
+                            try {
                                 JSONArray photoArray = jObj.getJSONArray("photos");
-                                Log.d("Photo Array",photoArray.toString());
+                                Log.d("Photo Array", photoArray.toString());
                                 JSONObject photoObject = photoArray.getJSONObject(0);
                                 placePhotoRef = photoObject.getString("photo_reference");
                                 hasPhoto = true;
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 hasPhoto = false;
                             }
 
-                            if(hasPhoto){
+                            if (hasPhoto) {
                                 JSONArray photoArray = jObj.getJSONArray("photos");
-                                Log.d("Photo Array",photoArray.toString());
+                                Log.d("Photo Array", photoArray.toString());
                                 JSONObject photoObject = photoArray.getJSONObject(0);
                                 placePhotoRef = photoObject.getString("photo_reference");
-                            }else{
+                            } else {
                                 placePhotoRef = "Not Available";
                             }
-
                             Log.d("Photo Ref", placePhotoRef);
 
-                            mItems.add(new PlaceItem(placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef));
+                            String uservalue = placeName;
+                            uservalue = uservalue.replace("'","\\").replace("\"", "\"\"");
+                            placeName = uservalue;
+
+                            notas = dbHelper.selectNotasPlace(placeName);
+
+                            if (notas.size() > 0) {
+                            for (int k = 0; k < notas.size(); k++) {
+                                media = (media + notas.get(k) / notas.size());
+                            }
+                        }
+                            mItems.add(new PlaceItem(placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef, media));
 
                         }
                     }
@@ -331,8 +326,54 @@ public class TesteFragment extends Fragment  {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setAdapter(mainActivityAdapter);
             mainActivityAdapter.notifyDataSetChanged();
+            ItemSorter itemSorter = new ItemSorter();
+
+            SharedPreferences sp = getActivity().getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+            String filtro = sp.getString("filtro", "");
+            if(filtro.equals("nota")){
+                itemSorter.sortItemByNota(mItems);
+                mainActivityAdapter = new MainActivityAdapter(mItems);
+                recyclerView.setAdapter(mainActivityAdapter);
+                mainActivityAdapter.notifyDataSetChanged();
+            }
+            else if (filtro.equals("distancia")){
+                ItemSorterByDistance itemSorterByDistance = new ItemSorterByDistance();
+                itemSorterByDistance.sortItemByDistance(mItems);
+                mainActivityAdapter = new MainActivityAdapter(mItems);
+                recyclerView.setAdapter(mainActivityAdapter);
+                mainActivityAdapter.notifyDataSetChanged();
+            }
+
+
         }
     }
+
+    public class ItemSorter {
+        public void sortItemByNota(List<PlaceItem> dealer) {
+
+            Collections.sort(dealer, new Comparator<PlaceItem>() {
+                @Override
+                public int compare(PlaceItem lhs, PlaceItem rhs) {
+                    return Float.compare(rhs.nota, lhs.nota);
+                }
+
+            });
+        }
+    }
+
+    public class ItemSorterByDistance {
+        public void sortItemByDistance (List<PlaceItem> dealer) {
+
+            Collections.sort(dealer, new Comparator<PlaceItem>() {
+                @Override
+                public int compare(PlaceItem lhs, PlaceItem rhs) {
+                    return lhs.placeDistance.compareTo(rhs.placeDistance);
+                }
+
+            });
+        }
+    }
+
 
     public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 

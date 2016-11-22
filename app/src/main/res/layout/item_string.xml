@@ -6,12 +6,12 @@
 
 
     <ImageView
-        android:layout_alignParentLeft="true"
-        android:id="@+id/img_string"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginRight="6dp"
-        android:src="@null" />
+    android:layout_alignParentLeft="true"
+    android:id="@+id/img_string"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginRight="6dp"
+    android:src="@null" />
 
     <ImageView
         android:layout_toRightOf="@+id/img_string"
@@ -20,16 +20,6 @@
         android:layout_height="80dp"
         android:layout_marginRight="6dp"
         android:src="@null" />
-
-
-    <ImageView
-        android:layout_toRightOf="@+id/img_string1"
-        android:id="@+id/img_string2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginRight="6dp"
-        android:src="@null" />
-
 
     <TextView
         android:layout_below="@+id/img_string"
@@ -40,12 +30,14 @@
         android:paddingRight="16dp"
         android:textSize="16sp" />
 
-    <View
-        android:id="@+id/vw_divider"
-        android:layout_marginBottom="20dp"
-        android:layout_alignLeft="@+id/img_string"
-        android:layout_below="@+id/string_id"
-        android:background="@color/colorPrimaryDark"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
+
+
+    <ImageView
+        android:layout_toRightOf="@+id/img_string1"
+        android:id="@+id/img_string2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="6dp"
+        android:src="@null" />
+
 </RelativeLayout>

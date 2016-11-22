@@ -18,12 +18,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.places.internal.PlaceLocalization;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,6 +49,7 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     GPSManager gpsManager;
     GoogleMap googleMap;
     android.support.v7.app.ActionBar actionBar;
+    RatingBar ratingBar;
 
     AvaliacaoListAdapter avaliacaoListAdapter;
 
@@ -78,6 +84,7 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
         gpsManager = new GPSManager(this);
 
 
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         listView = (ListView)findViewById(R.id.listView);
         txtNotas = (TextView)findViewById(R.id.txtNotas);
         SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -85,8 +92,8 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
         editor.putString("Name", placeName);
         editor.commit();
 
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        //actionBar = getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
 
         alert = new AlertDialogManager();
 
@@ -126,43 +133,40 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
         super.onResume();
         List<String> lista;
         List<String> concatena = new ArrayList<>();
-        List<Double> notas = new ArrayList<>();
-        double media = 0.0;
+        List<Float> notas = new ArrayList<>();
+        float media = 0;
         mAvaliacao = new ArrayList<>();
 
         DbHelper dbH = new DbHelper(this);
         try{
-            notas = dbH.selectNotas(placeName);
-            lista = dbH.selectUsuarioAvaliacao(placeName);
-            //mAvaliacao = dbH.selectUsuarioAvaliacao(placeName);
-            if(lista.size()==0 || notas.size()==0){
-                txtNotas.setText("Sem notas para exibir");
+            notas = dbH.selectNotasPlace(placeName);
+            lista = dbH.selectUsuarioAvaliacaoPlace(placeName);
+            for(int j=0; j<notas.size(); j++){
+                media = (media + notas.get(j) / notas.size());
+            }
+            if(notas.size()==0 && lista.size()==0){
+                txtNotas.setText("Estabelecimento não avaliado");
+                ratingBar.setRating(media);
                 String [] row = {"Nenhum comentario a ser exibido"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, row );
                 listView.setAdapter(adapter);
             }
-
             else {
-                for(int j=0; j<notas.size(); j++){
-                    media = (media + notas.get(j) / notas.size());
-                }
-                DecimalFormat formato = new DecimalFormat("#.#");
-                formato.format(media);
-                txtNotas.setText(Double.toString(media));
-               // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, lista );
-                for(int i=0; i<lista.size(); i++){
-                    concatena.add(lista.get(i) + ":" + "\n" + lista.get(i=i+1));
-                }
-               // avaliacaoListAdapter = new AvaliacaoListAdapter(getApplicationContext(),  concatena);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, concatena );
 
-                //listView.setAdapter(avaliacaoListAdapter);
-                 listView.setAdapter(adapter);
-                setListViewHeightBasedOnChildren(listView);
+                for(int i=0; i<lista.size(); i++){
+                    concatena.add(lista.get(i));
                 }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, concatena );
+                listView.setAdapter(adapter);
+                setListViewHeightBasedOnChildren(listView);
+                ratingBar.setRating(media);
+                txtNotas.setText("Nota do Estabelecimento: " + Float.toString(media));
+            }
 
         }catch (Exception e ){
             Log.i("Error:  ", e.getMessage());
+
         }
     }
 
@@ -199,8 +203,17 @@ public class SelectedPlaceDetails extends AppCompatActivity implements OnMapRead
     }
 
 
+
     public void avaliar(View v ){
-        Intent selectedPlace= new Intent(SelectedPlaceDetails.this, Avalicao.class);
+        /*Intent selectedPlace= new Intent(SelectedPlaceDetails.this, Avalicao.class);
+        selectedPlace.putExtra(KEY_NAME, placeName);
+        selectedPlace.putExtra(KEY_ADDRESS, placeVicinity);
+        selectedPlace.putExtra(KEY_PHOTOREFERENCE, placePhotoRef);
+        selectedPlace.putExtra(KEY_LATITUDE, placeLat);
+        selectedPlace.putExtra(KEY_LONGITUDE, placeLng);
+        startActivity(selectedPlace);
+        */
+        Intent selectedPlace = new Intent(SelectedPlaceDetails.this, AvaliacaoPlaces.class);
         selectedPlace.putExtra(KEY_NAME, placeName);
         selectedPlace.putExtra(KEY_ADDRESS, placeVicinity);
         selectedPlace.putExtra(KEY_PHOTOREFERENCE, placePhotoRef);

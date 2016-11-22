@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 public class SplashScreen extends Activity {
 
     protected boolean mbActive;
-    protected static final int TIMER_RUNTIME = 10000;
+    protected static final int TIMER_RUNTIME = 5000;
     protected ProgressBar progressBar;
 
     @Override

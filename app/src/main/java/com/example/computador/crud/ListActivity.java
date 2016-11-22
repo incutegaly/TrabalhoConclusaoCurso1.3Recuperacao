@@ -181,7 +181,6 @@ public class ListActivity extends Activity {
         JSONParser jsonParser = new JSONParser();
         JSONParser jsonParserDistance = new JSONParser();
         String placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -193,6 +192,8 @@ public class ListActivity extends Activity {
         }
 
         protected String doInBackground(String... args) {
+            DbHelper dbHelper = new DbHelper(getApplicationContext());
+            List<Float> notas = new ArrayList<>();
             HashMap<String, String> params = new HashMap<>();
             params.put("location", args[0]+","+args[1]);//TODO:CHANGE
             //params.put("location", "40.6655101,-73.89188969999998");
@@ -206,6 +207,7 @@ public class ListActivity extends Activity {
                     Log.d("resultsArray", resultsArray.toString());
                     if(resultsArray.length()>0){
                         for(int i = 0; i < resultsArray.length(); i++){
+                            float media = 0;
                             JSONObject jObj = resultsArray.getJSONObject(i);
                             Log.d("resultsObject: " + i, jObj.toString());
                             //LAT AND LNG
@@ -271,8 +273,11 @@ public class ListActivity extends Activity {
                             }
 
                             Log.d("Photo Ref", placePhotoRef);
-
-                            mItems.add(new PlaceItem(placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef));
+                            notas = dbHelper.selectNotasPlace(placeName);
+                            for (int k=0; k<notas.size(); k++){
+                                media = (media + notas.get(k)) / notas.size();
+                            }
+                            mItems.add(new PlaceItem(placeName, placeVicinity, placeType, placeDistance, placeLat, placeLng, placePhotoRef, media));
 
                         }
                     }

@@ -33,7 +33,7 @@ public class StringAdapter extends RecyclerView.Adapter<StringAdapter.MyViewHold
         holder.img_string2.setImageResource(mList.get(position).getPhoto());
         holder.img_string1.setImageResource(mList.get(position).getPhoto());
         holder.string_id.setText(mList.get(position).getNome());
-       // holder.string_id1.setText(mList.get(position).getNome());
+//        holder.string_id1.setText(mList.get(position).getNome());
 
     }
 
@@ -61,7 +61,7 @@ public class StringAdapter extends RecyclerView.Adapter<StringAdapter.MyViewHold
             super(itemView);
             viewGroup = (ViewGroup)itemView;
             img_string1 = (ImageView) itemView.findViewById(R.id.img_string1);
-            img_string2 = (ImageView) itemView.findViewById(R.id.img_string2) ;
+           img_string2 = (ImageView) itemView.findViewById(R.id.img_string2) ;
             img_string = (ImageView) itemView.findViewById(R.id.img_string);
             string_id = (TextView) itemView.findViewById(R.id.string_id);
             //string_id1 = (TextView) itemView.findViewById(R.id.string_id1);

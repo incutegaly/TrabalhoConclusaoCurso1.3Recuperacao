@@ -31,7 +31,7 @@ public class RecyclerViewAdapter extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_teste, container, false);
         mRecycler = (RecyclerView) view.findViewById(R.id.my_recycler_string);
-        mRecycler.setHasFixedSize(true);
+        //mRecycler.setHasFixedSize(true);
         mRecycler.addOnItemTouchListener(new RecyclerTouchListener(this, mRecycler, new ClickListener(){
 
             @Override
@@ -71,16 +71,16 @@ public class RecyclerViewAdapter extends Fragment{
 
         });
 
-
         LinearLayoutManager lM = new LinearLayoutManager(getActivity());
         lM.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecycler.setLayoutManager(lM);
+        mRecycler.addItemDecoration(new DividerDecotarion(getActivity()));
         mList = new ArrayList<>();
         String [] strings = new String[]{"restaurant", "school", "hospital"};
         int [] photos = new int[] {R.drawable.ic_action_name, R.drawable.ic_action_name_school, R.drawable.ic_action_name_hospital};
 
-        for (int i=0; i<3; i++){
-            StringParametro str = new StringParametro( strings[i % strings.length],photos[i % photos.length]);
+        for (int i=0; i<strings.length; i++){
+            StringParametro str = new StringParametro( strings[i],photos[i]);
             mList.add(str);
         }
 

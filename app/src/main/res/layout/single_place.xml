@@ -29,16 +29,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="avaliar"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:background="@drawable/botao"
             android:onClick="avaliar"
             android:id="@+id/avaliar"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/txtcoment"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/txtNotas"
-            android:text="Nota do estabelecimento: "/>
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="?android:attr/ratingBarStyle"
+            android:layout_marginTop="16dp"
+            android:id="@+id/ratingBar"></RatingBar>
 
         <TextView
             android:layout_width="match_parent"
@@ -59,6 +62,6 @@
         <ListView
             android:layout_width="match_parent"
             android:id="@+id/listView"
-            android:layout_height="match_parent" />
+            android:layout_height="137dp" />
 
     </LinearLayout></ScrollView>

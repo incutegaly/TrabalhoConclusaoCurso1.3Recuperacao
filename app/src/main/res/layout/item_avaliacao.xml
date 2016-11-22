@@ -21,7 +21,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-
+    <TextView
+        android:id="@+id/item1"
+        android:layout_below="@id/comentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/item2"
+        android:layout_below="@id/comentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/item3"
+        android:layout_below="@id/comentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/item4"
+        android:layout_below="@id/comentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/nome_usuario"
         android:layout_below="@id/comentario"

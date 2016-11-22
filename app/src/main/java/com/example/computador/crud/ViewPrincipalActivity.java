@@ -1,22 +1,22 @@
 package com.example.computador.crud;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -24,11 +24,12 @@ import android.widget.ListView;
 public class ViewPrincipalActivity extends AppCompatActivity 
         implements NavigationView.OnNavigationItemSelectedListener, TesteFragment.OnFragmentInteractionListener {
     private static final String PREF_NAME = "LoginActivityPreference";
-    protected boolean mbActive;
+    protected boolean mbActive = false;
     protected static  int TIMER_RUNTIME = 10000;
     private ListView listPlaces;
     private AlertDialog alerta; //atributo da classe
-
+    GPSManager userCoordinates;
+    AlertDialogManager alert;
 
 
 
@@ -36,7 +37,7 @@ public class ViewPrincipalActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_principal);
-
+        setTitle("ACESSA");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,18 +53,9 @@ public class ViewPrincipalActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
             android.app.FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.rl_fragment_container, new RecyclerViewAdapter()).commit();
+            //fragmentManager.beginTransaction().replace(R.id.rl_fragment_container, new RecyclerViewAdapter()).commit();
             fragmentManager.beginTransaction().replace(R.id.content_frame1, new TesteFragment()).commit();
 
-       final Handler ha=new Handler();
-        ha.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                check();
-                ha.postDelayed(this, 10000);
-            }
-        }, 10000);
 
     }
 
@@ -78,13 +70,16 @@ public class ViewPrincipalActivity extends AppCompatActivity
             }
         }
 
-    public void check(){
+    public boolean check(){
         InternetCheck internetCheck = new InternetCheck();
         if(internetCheck.isNetworkAvailable(this)){
             changeStatus(true);
+            return true;
         } else {
             changeStatus(false);
+            return false;
         }
+
     }
     @Override
     public void onBackPressed() {
@@ -125,17 +120,18 @@ public class ViewPrincipalActivity extends AppCompatActivity
         // Handle navigation view item clicks here.;
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_maps) {
-            Intent intent = new Intent(this, ListActivity.class);
-            startActivity(intent);
+            // Handle the camera action
+          if (id == R.id.nav_gallery) {
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().remove(getFragmentManager().findFragmentById(R.id.content_frame1)).commit();
+            //fragmentManager.beginTransaction().remove(getFragmentManager().findFragmentById(R.id.rl_fragment_container)).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragment, new FiltroFragment()).commit();
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(this, MyPlaces.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_usuario) {
+              startActivity(intent);
+
+          } else if (id == R.id.nav_usuario) {
             Intent intent = new Intent(this, UsuarioAlterarDados.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
@@ -180,20 +176,12 @@ public class ViewPrincipalActivity extends AppCompatActivity
     public void changeStatus(boolean isConnected) {
 
         // Change status according to boolean value
-        if (!isConnected) {
+        if (!isConnected && mbActive==false) {
             AlertDialog.Builder CheckBuilder = new AlertDialog.Builder(ViewPrincipalActivity.this);
+            mbActive = true;
             CheckBuilder.setIcon(R.mipmap.ic_launcher);
             CheckBuilder.setTitle("Error");
             CheckBuilder.setMessage("Sem conexão com Internet");
-            CheckBuilder.setPositiveButton("Tente Novamente", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    //Restartando Activity
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            });
 
             CheckBuilder.setNegativeButton("Sair", new DialogInterface.OnClickListener() {
                 @Override
@@ -202,9 +190,11 @@ public class ViewPrincipalActivity extends AppCompatActivity
                 }
             });
 
-            AlertDialog alertDialog = CheckBuilder.create();
-            alertDialog.show();
+            alerta  = CheckBuilder.create();
+            alerta.show();
+
         }
+
     }
 
     @Override
@@ -219,12 +209,31 @@ public class ViewPrincipalActivity extends AppCompatActivity
 
         super.onResume();
        ActivityVisibleConnection.activityResumed();// On Resume notify the Application
+        final Handler ha=new Handler();
+        ha.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                check();
+                ha.postDelayed(this, 10000);
+            }
+        }, 10000);
     }
 
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //alerta.isShowing();
+        if (alerta!= null) {
+            alerta.dismiss();
+            alerta = null;
+        }
     }
 }
 
